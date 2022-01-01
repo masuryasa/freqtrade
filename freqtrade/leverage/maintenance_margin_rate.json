@@ -1,0 +1,199 @@
+{
+    "125x": [{
+            "Level": 1,
+            "Position Bracket (Notional Value in USDT)": "First 50,000",
+            "Maintenance Margin Rate": "0.4%",
+            "Maintenance Amount (USDT)": "0"
+        },
+        {
+            "Level": 2,
+            "Position Bracket (Notional Value in USDT)": "50,000 - 250,000",
+            "Maintenance Margin Rate": "0.5%",
+            "Maintenance Amount (USDT)": "50"
+        },
+        {
+            "Level": 3,
+            "Position Bracket (Notional Value in USDT)": "250,000 - 1,000,000",
+            "Maintenance Margin Rate": "1.0%",
+            "Maintenance Amount (USDT)": "1,300"
+        },
+        {
+            "Level": 4,
+            "Position Bracket (Notional Value in USDT)": "1,000,000 - 5,000,000",
+            "Maintenance Margin Rate": "2.5%",
+            "Maintenance Amount (USDT)": "16,300"
+        },
+        {
+            "Level": 5,
+            "Position Bracket (Notional Value in USDT)": "5,000,000 - 20,000,000",
+            "Maintenance Margin Rate": "5.0%",
+            "Maintenance Amount (USDT)": "141,300"
+        },
+        {
+            "Level": 6,
+            "Position Bracket (Notional Value in USDT)": "20,000,000 - 50,000,000",
+            "Maintenance Margin Rate": "10.0%",
+            "Maintenance Amount (USDT)": "1,141,300"
+        },
+        {
+            "Level": 7,
+            "Position Bracket (Notional Value in USDT)": "50,000,000 - 100,000,000",
+            "Maintenance Margin Rate": "12.5%",
+            "Maintenance Amount (USDT)": "2,391,300"
+        },
+        {
+            "Level": 8,
+            "Position Bracket (Notional Value in USDT)": "100,000,000 - 200,000,000",
+            "Maintenance Margin Rate": "15.0%",
+            "Maintenance Amount (USDT)": "4,891,300"
+        },
+        {
+            "Level": 9,
+            "Position Bracket (Notional Value in USDT)": "Greater than 200,000,000",
+            "Maintenance Margin Rate": "25.0%",
+            "Maintenance Amount (USDT)": "24,891,300"
+        }
+    ],
+    "100x": [{
+            "Level": 1,
+            "Position Bracket (Notional Value in USDT)": "First 10,000",
+            "Maintenance Margin Rate": "0.5%",
+            "Maintenance Amount (USDT)": "0"
+        },
+        {
+            "Level": 2,
+            "Position Bracket (Notional Value in USDT)": "10,000 - 100,000",
+            "Maintenance Margin Rate": "0.65%",
+            "Maintenance Amount (USDT)": "15"
+        },
+        {
+            "Level": 3,
+            "Position Bracket (Notional Value in USDT)": "100,000 - 500,000",
+            "Maintenance Margin Rate": "1.0%",
+            "Maintenance Amount (USDT)": "365"
+        },
+        {
+            "Level": 4,
+            "Position Bracket (Notional Value in USDT)": "500,000 - 1,000,000",
+            "Maintenance Margin Rate": "2.0%",
+            "Maintenance Amount (USDT)": "5,365"
+        },
+        {
+            "Level": 5,
+            "Position Bracket (Notional Value in USDT)": "1,000,000 - 2,000,000",
+            "Maintenance Margin Rate": "5.0%",
+            "Maintenance Amount (USDT)": "35,365"
+        },
+        {
+            "Level": 6,
+            "Position Bracket (Notional Value in USDT)": "2,000,000 - 5,000,000",
+            "Maintenance Margin Rate": "10.0%",
+            "Maintenance Amount (USDT)": "135,365"
+        },
+        {
+            "Level": 7,
+            "Position Bracket (Notional Value in USDT)": "5,000,000 - 10,000,000",
+            "Maintenance Margin Rate": "12.5%",
+            "Maintenance Amount (USDT)": "260,365"
+        },
+        {
+            "Level": 8,
+            "Position Bracket (Notional Value in USDT)": "10,000,000 - 20,000,000",
+            "Maintenance Margin Rate": "15.0%",
+            "Maintenance Amount (USDT)": "510,365"
+        },
+        {
+            "Level": 9,
+            "Position Bracket (Notional Value in USDT)": "Greater than 20,000,000",
+            "Maintenance Margin Rate": "25.0%",
+            "Maintenance Amount (USDT)": "2,510,365"
+        }
+    ],
+    "75x": [{
+            "Level": 1,
+            "Position Bracket (Notional Value in USDT)": "First 10,000",
+            "Maintenance Margin Rate": "0.65%",
+            "Maintenance Amount (USDT)": "0"
+        },
+        {
+            "Level": 2,
+            "Position Bracket (Notional Value in USDT)": "10,000 - 50,000",
+            "Maintenance Margin Rate": "1.00%",
+            "Maintenance Amount (USDT)": "35"
+        },
+        {
+            "Level": 3,
+            "Position Bracket (Notional Value in USDT)": "50,000 - 250,000",
+            "Maintenance Margin Rate": "2.00%",
+            "Maintenance Amount (USDT)": "535"
+        },
+        {
+            "Level": 4,
+            "Position Bracket (Notional Value in USDT)": "250,000 - 1,000,000",
+            "Maintenance Margin Rate": "5.00%",
+            "Maintenance Amount (USDT)": "8,035"
+        },
+        {
+            "Level": 5,
+            "Position Bracket (Notional Value in USDT)": "1,000,000 - 2,000,000",
+            "Maintenance Margin Rate": "10.00%",
+            "Maintenance Amount (USDT)": "58,035"
+        },
+        {
+            "Level": 6,
+            "Position Bracket (Notional Value in USDT)": "2,000,000 - 5,000,000",
+            "Maintenance Margin Rate": "12.50%",
+            "Maintenance Amount (USDT)": "108,035"
+        },
+        {
+            "Level": 7,
+            "Position Bracket (Notional Value in USDT)": "5,000,000 - 10,000,000",
+            "Maintenance Margin Rate": "15.00%",
+            "Maintenance Amount (USDT)": "233,035"
+        },
+        {
+            "Level": 8,
+            "Position Bracket (Notional Value in USDT)": "Greater 10,000,000",
+            "Maintenance Margin Rate": "25.00%",
+            "Maintenance Amount (USDT)": "1,233,035"
+        }
+    ],
+    "50x": [{
+            "Level": 1,
+            "Position Bracket (Notional Value in USDT)": "First 5,000",
+            "Maintenance Margin Rate": "1.0%",
+            "Maintenance Amount (USDT)": "0"
+        },
+        {
+            "Level": 2,
+            "Position Bracket (Notional Value in USDT)": "5,000 - 25,000",
+            "Maintenance Margin Rate": "2.5%",
+            "Maintenance Amount (USDT)": "75"
+        },
+        {
+            "Level": 3,
+            "Position Bracket (Notional Value in USDT)": "25,000 - 100,000",
+            "Maintenance Margin Rate": "5.0%",
+            "Maintenance Amount (USDT)": "700"
+        },
+        {
+            "Level": 4,
+            "Position Bracket (Notional Value in USDT)": "100,000 - 250,000",
+            "Maintenance Margin Rate": "10.0%",
+            "Maintenance Amount (USDT)": "5,700"
+        },
+        {
+            "Level": 5,
+            "Position Bracket (Notional Value in USDT)": "250,000 - 1,000,000",
+            "Maintenance Margin Rate": "12.5%",
+            "Maintenance Amount (USDT)": "11,950"
+        },
+        {
+            "Level": 6,
+            "Position Bracket (Notional Value in USDT)": "Greater 1,000,000",
+            "Maintenance Margin Rate": "50.0%",
+            "Maintenance Amount (USDT)": "386,950"
+        }
+    ],
+    "25x": []
+}
