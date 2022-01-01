@@ -6,34 +6,73 @@ from freqtrade.exceptions import OperationalException
 
 def liquidation_price(
     exchange_name: str,
-    open_rate: float,
+    open_rate: float,   # (b) Entry price of position
     is_short: bool,
     leverage: float,
     trading_mode: TradingMode,
     collateral: Optional[Collateral],
     # Binance
-    wallet_balance: Optional[float] = None,
-    mm_ex_1: Optional[float] = None,
-    upnl_ex_1: Optional[float] = None,
-    maintenance_amt: Optional[float] = None,
-    position: Optional[float] = None,
-    mm_rate: Optional[float] = None,
+    collateral_amount: Optional[float] = None,  # (bg)
+    mm_ex_1: Optional[float] = None,  # (b)
+    upnl_ex_1: Optional[float] = None,  # (b)
+    maintenance_amt: Optional[float] = None,    # (b) (cum_b)
+    position: Optional[float] = None,   # (b) Absolute value of position size
+    mm_rate: Optional[float] = None,  # (b)
+    # Gateio & Okex
+    mm_ratio: Optional[float] = None,  # (go)
+    taker_fee_rate: Optional[float] = None,  # (go)
     # Gateio
-    collateral_amount: Optional[float] = None,
-    contract_size: Optional[float] = None,
-    num_contracts: Optional[float] = None,
-    taker_fee: Optional[float] = None,
-    # TODO-lev: Check that gatio margin ratio and okex margin ratio are the same
-    mm_ratio: Optional[float] = None,
+    base_size: Optional[float] = None,  # (g)
     # Okex
-    liability: Optional[float] = None,
-    interest: Optional[float] = None,
-    taker_fee_rate: Optional[float] = None,  # TODO-lev: Check if same as gateio taker_fee
-    position_assets: Optional[float] = None,
+    liability: Optional[float] = None,  # (o)
+    interest: Optional[float] = None,  # (o)
+    position_assets: Optional[float] = None,  # (o)
 ) -> Optional[float]:
     '''
-    # TODO-lev: Try to get rid of all exchange specific parameters by checking which
-    parameters are equal or can be derived from other parameters
+    exchange_name
+    is_short
+    leverage
+    trading_mode
+    collateral
+    #
+    open_rate - b
+    collateral_amount - bg
+        In Cross margin mode, WB is crossWalletBalance
+        In Isolated margin mode, WB is isolatedWalletBalance of the isolated position, 
+        TMM=0, UPNL=0, substitute the position quantity, MMR, cum into the formula to calculate.
+        Under the cross margin mode, the same ticker/symbol, 
+        both long and short position share the same liquidation price except in the isolated mode. 
+        Under the isolated mode, each isolated position will have different liquidation prices depending
+        on the margin allocated to the positions.
+    mm_ex_1 - b
+        Maintenance Margin of all other contracts, excluding Contract 1 
+        If it is an isolated margin mode, then TMM=0，UPNL=0
+    upnl_ex_1 - b
+        Unrealized PNL of all other contracts, excluding Contract 1
+        If it is an isolated margin mode, then UPNL=0
+    maintenance_amt (cumb) - b
+        Maintenance Amount of position
+    position - b
+        Absolute value of position size
+    mm_rate - b
+        Maintenance margin rate of position
+    # Gateio & okex
+    mm_ratio - go
+        - [assets in the position - (liability +interest) * mark price] / (maintenance margin + liquidation fee) (okex)
+    taker_fee_rate - go
+    # Gateio
+    base_size - g
+        The size of the position in base currency
+    # Okex
+    liability - o
+        Initial liabilities + deducted interest
+            • Long positions: Liability is calculated in quote currency.
+            • Short positions: Liability is calculated in trading currency.
+    interest - o
+        Interest that has not been deducted yet.
+    position_assets - o
+        # * I think this is the same as collateral_amount
+        Total position assets – on-hold by pending order
     '''
     if trading_mode == TradingMode.SPOT:
         return None
@@ -46,7 +85,7 @@ def liquidation_price(
 
     if exchange_name.lower() == "binance":
         if (
-            wallet_balance is None or
+            collateral_amount is None or
             mm_ex_1 is None or
             upnl_ex_1 is None or
             maintenance_amt is None or
@@ -65,7 +104,7 @@ def liquidation_price(
             leverage=leverage,
             trading_mode=trading_mode,
             collateral=collateral,  # type: ignore
-            wallet_balance=wallet_balance,
+            wallet_balance=collateral_amount,
             mm_ex_1=mm_ex_1,
             upnl_ex_1=upnl_ex_1,
             maintenance_amt=maintenance_amt,  # type: ignore
@@ -79,10 +118,9 @@ def liquidation_price(
     elif exchange_name.lower() == "gateio":
         if (
             not collateral_amount or
-            not contract_size or
-            not num_contracts or
+            not base_size or
             not mm_ratio or
-            not taker_fee
+            not taker_fee_rate
         ):
             raise OperationalException(
                 f"{exchange_name} {collateral} {trading_mode} requires parameters "
@@ -95,10 +133,9 @@ def liquidation_price(
                 trading_mode=trading_mode,
                 collateral=collateral,
                 collateral_amount=collateral_amount,
-                contract_size=contract_size,
-                num_contracts=num_contracts,
+                base_size=base_size,
                 mm_ratio=mm_ratio,
-                taker_fee=taker_fee
+                taker_fee_rate=taker_fee_rate
             )
     elif exchange_name.lower() == "okex":
         if (
@@ -261,10 +298,9 @@ def gateio(
     trading_mode: TradingMode,
     collateral: Collateral,
     collateral_amount: float,
-    contract_size: float,
-    num_contracts: float,
+    base_size: float,
     mm_ratio: float,
-    taker_fee: float,
+    taker_fee_rate: float,
     is_inverse: bool = False
 ):
     """
@@ -273,12 +309,14 @@ def gateio(
     :param is_short: True for short trades
     :param trading_mode: spot, margin, futures
     :param collateral: cross, isolated
-    :param collateral_amount: Also calle margin
-    :param contract_size: How much one contract is worth
-    :param num_contracts: Also called position
+    :param collateral_amount: Also called margin
+    :param base_size: size of position in base currency
+        contract_size / num_contracts
+        contract_size: How much one contract is worth
+        num_contracts: Also called position
     :param mm_ratio: Viewed in contract details
-    :param taker_fee:
-    :param is_inverse: True is settle currency matches base currency
+    :param taker_fee_rate:
+    :param is_inverse: True if settle currency matches base currency
 
     ( Opening Price ± Margin/Contract Multiplier/Position ) / [ 1 ± ( MMR + Taker Fee)]
     '±' in the formula refers to the direction of the contract,
@@ -294,12 +332,13 @@ def gateio(
         if is_inverse:
             raise OperationalException(
                 "Freqtrade does not support inverse contracts at the moment")
-        value = collateral_amount / contract_size / num_contracts
-        mm_ratio_taker = (mm_ratio + taker_fee)
+        value = collateral_amount / base_size
+
+        mm_ratio_taker = (mm_ratio + taker_fee_rate)
         if is_short:
-            (open_rate + value) / (1 + mm_ratio_taker)
+            return (open_rate + value) / (1 + mm_ratio_taker)
         else:
-            (open_rate - value) / (1 - mm_ratio_taker)
+            return (open_rate - value) / (1 - mm_ratio_taker)
     else:
         exception("gatio", trading_mode, collateral)
 
